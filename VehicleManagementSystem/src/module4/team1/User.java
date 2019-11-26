@@ -1,19 +1,26 @@
 package module4.team1;
 
 public class User {
-	private int userId;
+	private String userId;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String contactNo;
 	private String comment;
 	
+	public User(String firstName, String lastName, String email, String contactNo, String comment) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.contactNo = contactNo;
+		this.comment = comment;
+	}
 	
-	public int getCustomerId() {
+	public String getCustomerId() {
 		return userId;
 	}
-	public void setCustomerId(int userId) {
-		this.userId = userId;
+	public void setCustomerId() {
+		this.userId = DataObject.getInstance().getId();
 	}
 	public String getFirstName() {
 		return firstName;
@@ -44,7 +51,5 @@ public class User {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-	
-	
+	}	
 }
