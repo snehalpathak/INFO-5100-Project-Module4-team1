@@ -7,12 +7,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class ConnectionURL {
-	
-	
+
 	public static void main(String[] args) {
 
 		// Create a variable for the connection string.
-		String connectionUrl = "jdbc:sqlserver://is-swang01.ischool.uw.edu:1433;databaseName= VechileManagementSystem;user=INFO6210;password=NEUHusky!";
+		String connectionUrl = "jdbc:sqlserver://is-swang01.ischool.uw.edu:1433;databaseName=VechileManagementSystem;user=INFO6210;password=NEUHusky!";
 
 		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
 			String SQL = "SELECT TOP 10 * FROM dbo.CustomerRequest";
@@ -28,6 +27,5 @@ public class ConnectionURL {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 }
