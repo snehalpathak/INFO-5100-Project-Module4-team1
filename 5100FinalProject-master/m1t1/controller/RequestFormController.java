@@ -19,6 +19,8 @@ public class RequestFormController {
     private final VehicleTableDao vehicleTableDao;
     private final DealerTableDao dealerTableDao;
     private final CustomerRequestTableDao customerRequestTableDao;
+    private static VehicleDetails vehicleDetails;
+    private static DealerDetails dealerDetails;
 
     public RequestFormController(VehicleTableDao vehicleTableDao, DealerTableDao dealerTableDao, CustomerRequestTableDao customerRequestTableDao) {
         this.vehicleTableDao = vehicleTableDao;
@@ -28,8 +30,8 @@ public class RequestFormController {
 
 
     public RequestForm createRequestForm(String carId, String dealerId) {
-        VehicleDetails vehicleDetails = vehicleTableDao.getVehicleDetails(carId);
-        DealerDetails dealerDetails = dealerTableDao.getDealerDetails(dealerId);
+        vehicleDetails = vehicleTableDao.getVehicleDetails(carId);
+        dealerDetails = dealerTableDao.getDealerDetails(dealerId);
 
         return new RequestForm.RequestFormBuilder()
                 .withCarDetails(vehicleDetails)
@@ -66,5 +68,9 @@ public class RequestFormController {
 
         customerRequestTableDao.writeCustomerRequest(customerRequest);
         log.info("Successfully wrote customer request into table.");
+    }
+    
+    public void updateInterestedPeopleCount() {
+    	vehicleTableDao.updateInterestedPeopleCount(vehicleDetails.getId(), vehicleDetails.getInterestedPeopleCount());
     }
 }

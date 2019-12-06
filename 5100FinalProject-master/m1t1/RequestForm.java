@@ -7,6 +7,8 @@ import m1t1.database.dao.VehicleTableDao;
 import m1t1.database.model.CustomerInfo;
 import m1t1.database.model.DealerDetails;
 import m1t1.database.model.VehicleDetails;
+import m1t1.database.utils.Constants;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -61,8 +63,8 @@ public class RequestForm extends JFrame {
 				BLACK_CODE);
 		messageLabel = createJLabel("Write any message to the dealer in below box                               ",
 				BLACK_CODE);
-		interestedPeopleLabel = createJLabel(
-				String.format("%d people viewed this Car                                     ", interestedPeopleCount),
+		interestedPeopleLabel = createJLabel(String
+				.format("%d people interested in this Car                                     ", interestedPeopleCount),
 				RED_CODE);
 
 		carDetailsField = new JTextArea(3, 36);
@@ -233,13 +235,27 @@ public class RequestForm extends JFrame {
 	}
 
 	private void searchAndFillCustomerInfo() {
-		String phoneNumber = phoneNumField.getText();
+		String phoneNumber = checkContactNo(phoneNumField.getText());
 		Optional<CustomerInfo> customerInfo = requestFormController.getCustomerInfo(phoneNumber);
-
 		if (customerInfo.isPresent()) {
 			emailField.setText(customerInfo.get().getEmail());
 			firstNameField.setText(customerInfo.get().getFirstName());
 			lastNameField.setText(customerInfo.get().getLastName());
+		}
+	}
+
+	private String checkContactNo(String contactNum) {
+		String phoneNumber = "";
+		for (int i = 0; i < contactNum.length(); i++) {
+			char c = contactNum.charAt(i);
+			if (c >= '0' && c <= '9')
+				phoneNumber += c;
+		}
+		if (phoneNumber.length() > 10) {
+			JOptionPane.showMessageDialog(this, "Invalid Phone Number!!! Enter ten digits number");
+			return null;
+		} else {
+			return phoneNumber;
 		}
 	}
 
@@ -273,16 +289,14 @@ public class RequestForm extends JFrame {
 
 	private void writeToTable() {
 		requestFormController.writeCustomerRequest(this);
+		requestFormController.updateInterestedPeopleCount();
 	}
 
 	public static void main(String[] args) {
-		String sqlUrl = "jdbc:sqlserver://is-swang01.ischool.uw.edu:1433;databaseName=VechileManagementSystem;user=INFO6210;password=NEUHusky!";
-		String carTableName = "CarInventory";
-		String customerRequestTableName = "CustomerRequest";
-
-		RequestFormController controller = new RequestFormController(new VehicleTableDao(sqlUrl, carTableName),
-				new DealerTableDao(), new CustomerRequestTableDao(sqlUrl, customerRequestTableName));
-		JFrame f = controller.createRequestForm("SED2018001", "bbbbb");
+		RequestFormController controller = new RequestFormController(
+				new VehicleTableDao(Constants.sqlUrl, Constants.carTableName), new DealerTableDao(),
+				new CustomerRequestTableDao(Constants.sqlUrl, Constants.customerRequestTableName));
+		JFrame f = controller.createRequestForm("SED2018001", "DEA0001");
 		f.setTitle("Customer Request Form");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(600, 600);
